@@ -10,6 +10,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/tuuturu/trissect-goal-service/pkg/core"
@@ -18,7 +19,13 @@ import (
 func main() {
 	log.Printf("Server started")
 
+	cfg := core.LoadConfig()
+
+	if err := cfg.Validate(); err != nil {
+		panic(err)
+	}
+
 	router := core.NewRouter()
 
-	log.Fatal(router.Run(":8080"))
+	log.Fatal(router.Run(fmt.Sprintf(":%s", cfg.Port)))
 }

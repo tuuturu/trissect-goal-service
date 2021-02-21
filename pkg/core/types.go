@@ -16,3 +16,7 @@ type Route struct {
 
 // Routes is the list of the generated Route.
 type Routes []Route
+
+type Config struct {
+	Port string
+}
