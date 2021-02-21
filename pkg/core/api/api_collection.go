@@ -12,15 +12,21 @@ package api
 import (
 	"net/http"
 
+	"github.com/tuuturu/trissect-goal-service/pkg/core"
+
 	"github.com/gin-gonic/gin"
 )
 
 // AddGoal -
-func AddGoal(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{})
+func AddGoal(storage core.StorageClient) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{})
+	}
 }
 
 // GetAllGoals -
-func GetAllGoals(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{})
+func GetAllGoals(storage core.StorageClient) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{})
+	}
 }

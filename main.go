@@ -13,6 +13,8 @@ import (
 	"fmt"
 	"log"
 
+	router2 "github.com/tuuturu/trissect-goal-service/pkg/core/router"
+
 	"github.com/tuuturu/trissect-goal-service/pkg/core"
 )
 
@@ -25,7 +27,7 @@ func main() {
 		panic(err)
 	}
 
-	router := core.NewRouter()
+	router := router2.NewRouter(cfg)
 
 	log.Fatal(router.Run(fmt.Sprintf(":%s", cfg.Port)))
 }

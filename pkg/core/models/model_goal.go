@@ -10,13 +10,14 @@
 package models
 
 type Goal struct {
-	Id string `json:"id,omitempty"`
+	Id     string `json:"id,omitempty" db:"id"`
+	Author string `json:"author,omitempty" db:"author"`
 
-	Parent string `json:"parent,omitempty"`
+	Parent string `json:"parent,omitempty" db:"parent"`
 
-	Title string `json:"title"`
+	Title string `json:"title" db:"title"`
 
-	Reasoning string `json:"reasoning,omitempty"`
+	Reasoning string `json:"reasoning,omitempty" db:"reasoning"`
 
-	Complete bool `json:"complete,omitempty"`
+	Complete bool `json:"complete,omitempty" db:"complete"`
 }
