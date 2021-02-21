@@ -21,4 +21,4 @@ EXPOSE 8080/tcp
 ENTRYPOINT ["./openapi"]
 
 COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
-COPY --from=build /go/src/goals-service ./
+COPY --from=build /go/src/openapi ./
