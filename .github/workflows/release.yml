@@ -56,18 +56,18 @@ jobs:
           RELEASE_BRANCHES: main
           WITH_V: true
 
-      - run: echo "::set-output name=version::$(git describe --tags `git rev-list --tags --max-count=1`)"
+      - run: echo "version=$(git describe --tags `git rev-list --tags --max-count=1`)" >> $GITHUB_ENV
         id: version_store
 
       - run: |
-          sed -i 's~docker.pkg.github.com/tuuturu/trissect-goal-service/trissect-goals-service:.*~docker.pkg.github.com/tuuturu/trissect-goal-service/trissect-goals-service:${{ steps.version_store.version }}~' \
+          sed -i 's~docker.pkg.github.com/tuuturu/trissect-goal-service/trissect-goals-service:.*~docker.pkg.github.com/tuuturu/trissect-goal-service/trissect-goals-service:${{ env.version }}~' \
           kustomize/deployment.yaml
 
       - name: Build and push Docker images
-        run: docker build --tag docker.pkg.github.com/tuuturu/trissect-goal-service/trissect-goals-service:${{ steps.version_store.version }} .
+        run: docker build --tag docker.pkg.github.com/tuuturu/trissect-goal-service/trissect-goals-service:${{ env.version }} .
 
       - name: Push docker image
-        run: docker push docker.pkg.github.com/tuuturu/trissect-goal-service/trissect-goals-service:${{ steps.version_store.version }}
+        run: docker push docker.pkg.github.com/tuuturu/trissect-goal-service/trissect-goals-service:${{ env.version }}
 
       - run: git commit -m '📦 Bump image in K8s resources' kustomize/deployment.yaml && git push
 
