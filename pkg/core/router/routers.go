@@ -12,7 +12,10 @@ package router
 import (
 	"fmt"
 	"net/http"
+	"os"
 
+	"github.com/oslokommune/go-oidc-middleware/pkg/v1/middleware"
+	"github.com/sirupsen/logrus"
 	"github.com/tuuturu/trissect-goal-service/pkg/core"
 	"github.com/tuuturu/trissect-goal-service/pkg/storage/upper"
 
@@ -28,7 +31,7 @@ func NewRouter(cfg core.Config) *gin.Engine {
 	var storage core.StorageClient
 
 	switch cfg.DSN.Scheme {
-	case "postgresql":
+	case "postgres":
 		storage = upper.NewClient(cfg.DSN)
 	default:
 		panic(fmt.Sprintf("Unsupported database scheme %s", cfg.DSN.Scheme))
@@ -36,8 +39,14 @@ func NewRouter(cfg core.Config) *gin.Engine {
 
 	err := storage.Open()
 	if err != nil {
-		panic("unable to open database")
+		panic(err)
 	}
+
+	router.Use(middleware.NewGinAuthenticationMiddleware(middleware.NewJWTValidationMiddlewareOptions{
+		Out:          os.Stdout,
+		LogLevel:     logrus.InfoLevel,
+		DiscoveryURL: cfg.DiscoveryURL,
+	}))
 
 	for _, route := range routes {
 		switch route.Method {
@@ -45,6 +54,8 @@ func NewRouter(cfg core.Config) *gin.Engine {
 			router.GET(route.Pattern, route.HandlerFuncGenerator(storage))
 		case http.MethodPost:
 			router.POST(route.Pattern, route.HandlerFuncGenerator(storage))
+		case http.MethodPatch:
+			router.PATCH(route.Pattern, route.HandlerFuncGenerator(storage))
 		case http.MethodPut:
 			router.PUT(route.Pattern, route.HandlerFuncGenerator(storage))
 		case http.MethodDelete:

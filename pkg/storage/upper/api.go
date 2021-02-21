@@ -1,6 +1,8 @@
 package upper
 
 import (
+	"fmt"
+
 	"github.com/tuuturu/trissect-goal-service/pkg/core"
 	"github.com/upper/db/v4/adapter/postgresql"
 )
@@ -10,7 +12,7 @@ func NewClient(dsn core.DSN) core.StorageClient {
 		connectionURL: &postgresql.ConnectionURL{
 			User:     dsn.Username,
 			Password: dsn.Password,
-			Host:     dsn.URI,
+			Host:     fmt.Sprintf("%s:%s", dsn.URI, dsn.Port),
 			Database: dsn.DatabaseName,
 		},
 	}

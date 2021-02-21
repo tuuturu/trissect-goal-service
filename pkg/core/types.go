@@ -2,6 +2,9 @@ package core
 
 import (
 	"errors"
+	"net/url"
+
+	"github.com/sirupsen/logrus"
 
 	"github.com/gin-gonic/gin"
 	"github.com/tuuturu/trissect-goal-service/pkg/core/models"
@@ -11,9 +14,12 @@ import (
  * Config
  */
 type Config struct {
-	Port string
+	DiscoveryURL *url.URL
+	DSN          DSN
 
-	DSN DSN
+	LogLevel logrus.Level
+
+	Port string
 }
 
 /*
