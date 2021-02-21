@@ -19,6 +19,6 @@ spec:
       - env:
         - name: MY_VARIABLE
           value: my-value
-        image: docker.pkg.github.com/tuuturu/trissect-goal-service/trissect-goals-service:v0.0.7
+        image: docker.pkg.github.com/tuuturu/trissect-goal-service/trissect-goals-service:v0.0.8
         name: goals-service
 
