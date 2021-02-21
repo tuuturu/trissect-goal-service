@@ -121,6 +121,8 @@ paths:
 components:
   schemas:
     Goal:
+      required:
+        - title
       properties:
         id:
           type: string
@@ -133,7 +135,6 @@ components:
         title:
           type: string
           example: Go to the moon
-          required: true
         reasoning:
           type: string
           example: It will make me feel like I a thousand dollars
