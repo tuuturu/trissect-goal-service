@@ -69,5 +69,11 @@ jobs:
       - name: Push docker image
         run: docker push docker.pkg.github.com/tuuturu/trissect-goal-service/trissect-goals-service:${{ env.version }}
 
-      - run: git commit -m '📦 Bump image in K8s resources' kustomize/deployment.yaml && git push
+      - name: Commit Kubernetes chart version bump
+        uses: EndBug/add-and-commit@v4
+        with:
+          author_name: 'Automated Version Bump'
+          author_email: 'action@github.com'
+          add: 'kustomize/deployment.yaml'
+          message: "📦 Bump version to ${{ env.version }}"
 
