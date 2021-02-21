@@ -10,7 +10,6 @@
 package models
 
 type Goal struct {
-
 	Id string `json:"id,omitempty"`
 
 	Parent string `json:"parent,omitempty"`

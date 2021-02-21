@@ -15,12 +15,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// AddGoal - 
+// AddGoal -
 func AddGoal(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{})
 }
 
-// GetAllGoals - 
+// GetAllGoals -
 func GetAllGoals(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{})
 }

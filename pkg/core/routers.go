@@ -10,8 +10,9 @@
 package core
 
 import (
-	"github.com/tuuturu/trissect-goal-service/pkg/core/api"
 	"net/http"
+
+	"github.com/tuuturu/trissect-goal-service/pkg/core/api"
 
 	"github.com/gin-gonic/gin"
 )

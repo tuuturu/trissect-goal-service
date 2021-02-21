@@ -10,8 +10,9 @@
 package main
 
 import (
-	"github.com/tuuturu/trissect-goal-service/pkg/core"
 	"log"
+
+	"github.com/tuuturu/trissect-goal-service/pkg/core"
 )
 
 func main() {
