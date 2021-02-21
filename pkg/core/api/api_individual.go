@@ -10,9 +10,12 @@
 package api
 
 import (
+	"errors"
 	"net/http"
 
+	"github.com/google/uuid"
 	"github.com/tuuturu/trissect-goal-service/pkg/core"
+	"github.com/tuuturu/trissect-goal-service/pkg/core/models"
 
 	"github.com/gin-gonic/gin"
 )
@@ -20,20 +23,137 @@ import (
 // DeleteGoal -
 func DeleteGoal(storage core.StorageClient) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{})
+		var (
+			err    error
+			author = "janedoe"
+			id     = c.Param("id")
+		)
+
+		if _, err := uuid.Parse(id); err != nil {
+			c.Status(http.StatusBadRequest)
+
+			return
+		}
+
+		originalGoal, err := storage.Get(id)
+		if err != nil {
+			switch {
+			case errors.Is(core.StorageErrorNotFound, err):
+				c.Status(http.StatusNotFound)
+			default:
+				c.Status(http.StatusInternalServerError)
+			}
+
+			return
+		}
+
+		if author != originalGoal.Author {
+			c.Status(http.StatusForbidden)
+
+			return
+		}
+
+		err = storage.Delete(id)
+		if err != nil {
+			switch {
+			case errors.Is(core.StorageErrorNotFound, err):
+				c.Status(http.StatusNotFound)
+			default:
+				c.Status(http.StatusInternalServerError)
+			}
+
+			return
+		}
+
+		c.JSON(http.StatusNoContent, gin.H{})
 	}
 }
 
 // GetGoal -
 func GetGoal(storage core.StorageClient) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{})
+		author := "janedoe"
+		id := c.Param("id")
+
+		if _, err := uuid.Parse(id); err != nil {
+			c.Status(http.StatusBadRequest)
+
+			return
+		}
+
+		goal, err := storage.Get(id)
+		if err != nil {
+			switch {
+			case errors.Is(core.StorageErrorNotFound, err):
+				c.Status(http.StatusNotFound)
+			default:
+				c.Status(http.StatusInternalServerError)
+			}
+
+			return
+		}
+
+		if author != goal.Author {
+			c.Status(http.StatusForbidden)
+
+			return
+		}
+
+		c.JSON(http.StatusOK, goal)
 	}
 }
 
 // UpdateGoal -
 func UpdateGoal(storage core.StorageClient) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{})
+		var (
+			err        error
+			goalUpdate models.Goal
+			id         = c.Param("id")
+			author     = "janedoe"
+		)
+
+		err = c.Bind(&goalUpdate)
+		if err != nil {
+			c.Status(http.StatusBadRequest)
+
+			return
+		}
+
+		if _, err = uuid.Parse(id); err != nil {
+			c.Status(http.StatusBadRequest)
+
+			return
+		}
+
+		originalGoal, err := storage.Get(id)
+		if err != nil {
+			switch {
+			case errors.Is(core.StorageErrorNotFound, err):
+				c.Status(http.StatusNotFound)
+			default:
+				c.Status(http.StatusInternalServerError)
+			}
+
+			return
+		}
+
+		if author != originalGoal.Author {
+			c.Status(http.StatusForbidden)
+
+			return
+		}
+
+		goalUpdate.Id = id
+		goalUpdate.Author = author
+
+		result, err := storage.Update(goalUpdate)
+		if err != nil {
+			c.Status(http.StatusInternalServerError)
+
+			return
+		}
+
+		c.JSON(http.StatusOK, result)
 	}
 }

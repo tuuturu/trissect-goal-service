@@ -5,6 +5,7 @@ go 1.15
 require (
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
+	github.com/google/uuid v1.1.1
 	github.com/imdario/mergo v0.3.11
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/upper/db/v4 v4.1.0

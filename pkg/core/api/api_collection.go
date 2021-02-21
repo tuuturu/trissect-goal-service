@@ -12,6 +12,9 @@ package api
 import (
 	"net/http"
 
+	"github.com/google/uuid"
+	"github.com/tuuturu/trissect-goal-service/pkg/core/models"
+
 	"github.com/tuuturu/trissect-goal-service/pkg/core"
 
 	"github.com/gin-gonic/gin"
@@ -20,13 +23,46 @@ import (
 // AddGoal -
 func AddGoal(storage core.StorageClient) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{})
+		var (
+			err  error
+			goal models.Goal
+		)
+
+		err = c.Bind(&goal)
+		if err != nil {
+			c.Status(http.StatusBadRequest)
+
+			return
+		}
+
+		goal.Id = uuid.New().String()
+		goal.Author = "janedoe"
+
+		err = storage.Add(goal)
+		if err != nil {
+			c.Status(http.StatusInternalServerError)
+
+			return
+		}
+
+		c.JSON(http.StatusCreated, goal)
 	}
 }
 
 // GetAllGoals -
 func GetAllGoals(storage core.StorageClient) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{})
+		author := "janedoe"
+
+		goals, err := storage.GetAll(core.StorageFilter{
+			Author: core.StringToPtr(author),
+		})
+		if err != nil {
+			c.Status(http.StatusInternalServerError)
+
+			return
+		}
+
+		c.JSON(http.StatusOK, goals)
 	}
 }

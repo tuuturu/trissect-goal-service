@@ -32,7 +32,7 @@ type StorageClient interface {
 	Open() (err error)
 	Close() (err error)
 
-	Add(goal models.Goal) (id string, err error)
+	Add(goal models.Goal) (err error)
 	Get(id string) (result models.Goal, err error)
 	GetAll(filter StorageFilter) (result []models.Goal, err error)
 	Update(goal models.Goal) (updatedGoal models.Goal, err error)

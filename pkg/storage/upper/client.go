@@ -10,15 +10,15 @@ import (
 	"github.com/upper/db/v4/adapter/postgresql"
 )
 
-func (c *client) Add(goal models.Goal) (id string, err error) {
+func (c *client) Add(goal models.Goal) (err error) {
 	collection := c.Session.Collection(goalTable)
 
 	_, err = collection.Insert(&goal)
 	if err != nil {
-		return id, fmt.Errorf("error inserting goal: %w", err)
+		return fmt.Errorf("error inserting goal: %w", err)
 	}
 
-	return id, nil
+	return nil
 }
 
 func (c *client) Get(id string) (result models.Goal, err error) {
