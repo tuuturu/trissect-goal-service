@@ -1,0 +1,161 @@
+openapi: 3.0.3
+
+info:
+  version: 0.0.1
+  title: Trissect Goal Service
+  description: Handles CRUD operations on Goal resources
+  license:
+    name: MIT
+    url: https://mit-license.org/
+
+tags:
+  - name: individual
+    description: Operations for individual Goals
+  - name: collection
+    description: Operations for a collection of Goals
+
+paths:
+  /goals:
+    get:
+      operationId: getAllGoals
+      tags:
+        - collection
+      parameters:
+        - in: query
+          name: complete
+          schema:
+            type: boolean
+      responses:
+        200:
+          description: A list of goals
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Goal'
+        401:
+          $ref: '#/components/responses/401'
+        500:
+          $ref: '#/components/responses/500'
+    post:
+      operationId: addGoal
+      tags:
+        - collection
+      requestBody:
+        description: The goal to add
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Goal'
+      responses:
+        201:
+          description: Successfully added new goal
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Goal'
+        401:
+          $ref: '#/components/responses/401'
+        500:
+          $ref: '#/components/responses/500'
+
+  /goals/{id}:
+    get:
+      operationId: getGoal
+      tags: [individual]
+      description: Fetch a single Goal
+      parameters:
+        - $ref: '#/components/parameters/goalIDInPath'
+      responses:
+        200:
+          description: Successfully retrieved a Goal
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Goal'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+    patch:
+      operationId: updateGoal
+      tags: [individual]
+      description: Update a Goal
+      parameters:
+        - $ref: '#/components/parameters/goalIDInPath'
+      responses:
+        204:
+          description: Successfully updated a Goal
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+    delete:
+      operationId: deleteGoal
+      tags: [individual]
+      description: Delete a Goal
+      parameters:
+        - $ref: '#/components/parameters/goalIDInPath'
+      responses:
+        204:
+          description: Successfully deleted a Goal
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+
+
+components:
+  schemas:
+    Goal:
+      properties:
+        id:
+          type: string
+          readOnly: true
+          example: b6949955-efe6-4c7c-8c98-1e793381d409
+        parent:
+          type: string
+          example: eb7a5374-5b01-499e-a300-34df9abbb489
+          nullable: true
+        title:
+          type: string
+          example: Go to the moon
+          required: true
+        reasoning:
+          type: string
+          example: It will make me feel like I a thousand dollars
+        complete:
+          type: boolean
+          example: false
+
+  responses:
+    401:
+      description: Not authenticated
+    403:
+      description: Not authorized
+    404:
+      description: Not found
+    500:
+      description: Internal server error
+
+  parameters:
+    goalIDInPath:
+      in: path
+      name: id
+      required: true
+      schema:
+        type: string
+        example: eb7a5374-5b01-499e-a300-34df9abbb489
