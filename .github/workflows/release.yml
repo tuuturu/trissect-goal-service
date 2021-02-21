@@ -27,6 +27,13 @@ jobs:
         with:
           fetch-depth: '1'
 
+      - uses: actions/cache@v2.1.4
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
       - name: Install dependencies
         run: |
           go get -v -t -d ./...
@@ -35,7 +42,7 @@ jobs:
         run: make lint
 
       - name: Run tests
-        run: make test
+        run: make check
 
       - name: Run test build
         run: go build -a -installsuffix cgo -o goals-service .
