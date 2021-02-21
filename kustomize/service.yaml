@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: goals-service
+  namespace: trissect
+spec:
+  ports:
+  - port: 80
+    targetPort: 3000
+  selector:
+    app: goals-service
+  type: ClusterIP
+
